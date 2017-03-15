@@ -1,10 +1,5 @@
 package com.quartz;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
@@ -14,6 +9,11 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.scheduling.quartz.CronTriggerBean;
 import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 
 public class QuartzManager implements BeanFactoryAware {
 	private Logger log = Logger.getLogger(QuartzManager.class);
@@ -22,10 +22,11 @@ public class QuartzManager implements BeanFactoryAware {
 
 	@SuppressWarnings("unused")
 	private void reScheduleJob() throws Exception, ParseException {
-		// Í¨¹ı²éÑ¯Êı¾İ¿âÀï¼Æ»®ÈÎÎñÀ´ÅäÖÃ¼Æ»®ÈÎÎñ
+		// Í¨ï¿½ï¿½ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½İ¿ï¿½ï¿½ï¿½Æ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¼Æ»ï¿½ï¿½ï¿½ï¿½ï¿½
+		// ä¿®æ”¹æ³¨é‡Š1
 		System.out.println("reScheduleJob---->"+new Date());
 		Wsdoc d= new Wsdoc();
-		List<Wsdoc> quartzList = new ArrayList<Wsdoc>();//ÕâÀïÊÇÊÖ¶¯ÉèÖÃÁËÒ»¸ö
+		List<Wsdoc> quartzList = new ArrayList<Wsdoc>();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
 		Wsdoc tbcq=new Wsdoc();
 		tbcq.setTriggername("triggername");
 		tbcq.setCronexpression("0/5 * * * * ?");
@@ -47,14 +48,14 @@ public class QuartzManager implements BeanFactoryAware {
 	public boolean configQuatrz(Wsdoc tbcq) {
 		boolean result = false;
 		try {
-			// ÔËĞĞÊ±¿ÉÍ¨¹ı¶¯Ì¬×¢ÈëµÄschedulerµÃµ½trigger
+			// ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½Ì¬×¢ï¿½ï¿½ï¿½schedulerï¿½Ãµï¿½trigger
 			CronTriggerBean trigger = (CronTriggerBean) scheduler.getTrigger(
 					tbcq.getTriggername(), Scheduler.DEFAULT_GROUP);
-			// Èç¹û¼Æ»®ÈÎÎñÒÑ´æÔÚÔòµ÷ÓÃĞŞ¸Ä·½·¨
+			// ï¿½ï¿½ï¿½ï¿½Æ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ş¸Ä·ï¿½ï¿½ï¿½
 			if (trigger != null) {
 				change(tbcq, trigger);
 			} else {
-				// Èç¹û¼Æ»®ÈÎÎñ²»´æÔÚ²¢ÇÒÊı¾İ¿âÀïµÄÈÎÎñ×´Ì¬Îª¿ÉÓÃÊ±,Ôò´´½¨¼Æ»®ÈÎÎñ
+				// ï¿½ï¿½ï¿½ï¿½Æ»ï¿½ï¿½ï¿½ï¿½ñ²»´ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬Îªï¿½ï¿½ï¿½ï¿½Ê±,ï¿½ò´´½ï¿½ï¿½Æ»ï¿½ï¿½ï¿½ï¿½ï¿½
 				if (tbcq.getState().equals("1")) {
 					this.createCronTriggerBean(tbcq);
 				}
@@ -70,66 +71,66 @@ public class QuartzManager implements BeanFactoryAware {
 
 	public void change(Wsdoc tbcq, CronTriggerBean trigger)
 			throws Exception {
-		// Èç¹ûÈÎÎñÎª¿ÉÓÃ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½
 		if (tbcq.getState().equals("1")) {
-			// ÅĞ¶Ï´ÓDBÖĞÈ¡µÃµÄÈÎÎñÊ±¼äºÍÏÖÔÚµÄquartzÏß³ÌÖĞµÄÈÎÎñÊ±¼äÊÇ·ñÏàµÈ
-			// Èç¹ûÏàµÈ£¬Ôò±íÊ¾ÓÃ»§²¢Ã»ÓĞÖØĞÂÉè¶¨Êı¾İ¿âÖĞµÄÈÎÎñÊ±¼ä£¬ÕâÖÖÇé¿ö²»ĞèÒªÖØĞÂrescheduleJob
+			// ï¿½Ğ¶Ï´ï¿½DBï¿½ï¿½È¡ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½quartzï¿½ß³ï¿½ï¿½Ğµï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½
+			// ï¿½ï¿½ï¿½ï¿½ï¿½È£ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½Ã»ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è¶¨ï¿½ï¿½ï¿½İ¿ï¿½ï¿½Ğµï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½rescheduleJob
 			if (!trigger.getCronExpression().equalsIgnoreCase(
 					tbcq.getCronexpression())) {
 				trigger.setCronExpression(tbcq.getCronexpression());
 				scheduler.rescheduleJob(tbcq.getTriggername(),
 						Scheduler.DEFAULT_GROUP, trigger);
-				log.info(new Date() + ": ¸üĞÂ" + tbcq.getTriggername() + "¼Æ»®ÈÎÎñ");
+				log.info(new Date() + ": ï¿½ï¿½ï¿½ï¿½" + tbcq.getTriggername() + "ï¿½Æ»ï¿½ï¿½ï¿½ï¿½ï¿½");
 			}
 		} else {
-			// ²»¿ÉÓÃ
-			scheduler.pauseTrigger(trigger.getName(), trigger.getGroup());// Í£Ö¹´¥·¢Æ÷
-			scheduler.unscheduleJob(trigger.getName(), trigger.getGroup());// ÒÆ³ı´¥·¢Æ÷
-			scheduler.deleteJob(trigger.getJobName(), trigger.getJobGroup());// É¾³ıÈÎÎñ
-			log.info(new Date() + ": É¾³ı" + tbcq.getTriggername() + "¼Æ»®ÈÎÎñ");
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			scheduler.pauseTrigger(trigger.getName(), trigger.getGroup());// Í£Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			scheduler.unscheduleJob(trigger.getName(), trigger.getGroup());// ï¿½Æ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			scheduler.deleteJob(trigger.getJobName(), trigger.getJobGroup());// É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			log.info(new Date() + ": É¾ï¿½ï¿½" + tbcq.getTriggername() + "ï¿½Æ»ï¿½ï¿½ï¿½ï¿½ï¿½");
 
 		}
 
 	}
 
 	/**
-	 * ´´½¨/Ìí¼Ó¼Æ»®ÈÎÎñ
+	 * ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½Ó¼Æ»ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @param tbcq
-	 *            ¼Æ»®ÈÎÎñÅäÖÃ¶ÔÏó
+	 *            ï¿½Æ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½
 	 * @throws Exception
 	 */
 	public void createCronTriggerBean(Wsdoc tbcq) throws Exception {
-		// ĞÂ½¨Ò»¸ö»ùÓÚSpringµÄ¹ÜÀíJobÀà
+		// ï¿½Â½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Springï¿½Ä¹ï¿½ï¿½ï¿½Jobï¿½ï¿½
 		MethodInvokingJobDetailFactoryBean mjdfb = new MethodInvokingJobDetailFactoryBean();
-		mjdfb.setName(tbcq.getJobdetailname());// ÉèÖÃJobÃû³Æ
-		// Èç¹û¶¨ÒåµÄÈÎÎñÀàÎªSpringµÄ¶¨ÒåµÄBeanÔòµ÷ÓÃ getBean·½·¨
+		mjdfb.setName(tbcq.getJobdetailname());// ï¿½ï¿½ï¿½ï¿½Jobï¿½ï¿½ï¿½ï¿½
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎªSpringï¿½Ä¶ï¿½ï¿½ï¿½ï¿½Beanï¿½ï¿½ï¿½ï¿½ï¿½ getBeanï¿½ï¿½ï¿½ï¿½
 		if (tbcq.getIsspringbean().equals("1")) {
-			mjdfb.setTargetObject(beanFactory.getBean(tbcq.getTargetobject()));// ÉèÖÃÈÎÎñÀà
+			mjdfb.setTargetObject(beanFactory.getBean(tbcq.getTargetobject()));// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		} else {
-			// ·ñÔòÖ±½Ónew¶ÔÏó
+			// ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½newï¿½ï¿½ï¿½ï¿½
 			mjdfb.setTargetObject(Class.forName(tbcq.getTargetobject())
-					.newInstance());// ÉèÖÃÈÎÎñÀà
+					.newInstance());// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		}
 
-		mjdfb.setTargetMethod(tbcq.getMethodname());// ÉèÖÃÈÎÎñ·½·¨
-		mjdfb.setConcurrent(tbcq.getConcurrent().equals("0") ? false : true); // ÉèÖÃÊÇ·ñ²¢·¢Æô¶¯ÈÎÎñ
-		mjdfb.afterPropertiesSet();// ½«¹ÜÀíJobÀàÌá½»µ½¼Æ»®¹ÜÀíÀà
-		// ½«SpringµÄ¹ÜÀíJobÀà×ªÎªQuartz¹ÜÀíJobÀà
+		mjdfb.setTargetMethod(tbcq.getMethodname());// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ñ·½·ï¿½
+		mjdfb.setConcurrent(tbcq.getConcurrent().equals("0") ? false : true); // ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ñ²¢·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		mjdfb.afterPropertiesSet();// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Jobï¿½ï¿½ï¿½á½»ï¿½ï¿½ï¿½Æ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// ï¿½ï¿½Springï¿½Ä¹ï¿½ï¿½ï¿½Jobï¿½ï¿½×ªÎªQuartzï¿½ï¿½ï¿½ï¿½Jobï¿½ï¿½
 		JobDetail jobDetail = new JobDetail();
 		jobDetail = (JobDetail) mjdfb.getObject();
 		jobDetail.setName(tbcq.getJobdetailname());
-		scheduler.addJob(jobDetail, true); // ½«JobÌí¼Óµ½¹ÜÀíÀà
-		// ĞÂÒ»¸ö»ùÓÚSpringµÄÊ±¼äÀà
+		scheduler.addJob(jobDetail, true); // ï¿½ï¿½Jobï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Springï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
 		CronTriggerBean c = new CronTriggerBean();
-		c.setCronExpression(tbcq.getCronexpression());// ÉèÖÃÊ±¼ä±í´ïÊ½
-		c.setName(tbcq.getTriggername());// ÉèÖÃÃû³Æ
-		c.setJobDetail(jobDetail);// ×¢ÈëJob
-		c.setJobName(tbcq.getJobdetailname());// ÉèÖÃJobÃû³Æ
-		scheduler.scheduleJob(c);// ×¢Èëµ½¹ÜÀíÀà
+		c.setCronExpression(tbcq.getCronexpression());// ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ê½
+		c.setName(tbcq.getTriggername());// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		c.setJobDetail(jobDetail);// ×¢ï¿½ï¿½Job
+		c.setJobName(tbcq.getJobdetailname());// ï¿½ï¿½ï¿½ï¿½Jobï¿½ï¿½ï¿½ï¿½
+		scheduler.scheduleJob(c);// ×¢ï¿½ëµ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		scheduler.rescheduleJob(tbcq.getTriggername(), Scheduler.DEFAULT_GROUP,
-				c);// Ë¢ĞÂ¹ÜÀíÀà
-		log.info(new Date() + ": ĞÂ½¨" + tbcq.getTriggername() + "¼Æ»®ÈÎÎñ");
+				c);// Ë¢ï¿½Â¹ï¿½ï¿½ï¿½ï¿½ï¿½
+		log.info(new Date() + ": ï¿½Â½ï¿½" + tbcq.getTriggername() + "ï¿½Æ»ï¿½ï¿½ï¿½ï¿½ï¿½");
 	}
 
 
