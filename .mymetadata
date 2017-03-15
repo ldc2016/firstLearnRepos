@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="Timer"
+  id="myeclipse.1345532777655"
+  context-root="/timer"
+  j2ee-spec="5.0"
+  archive="Timer.war">
+  <attributes>
+    <attribute name="webrootdir" value="/WebRoot" />
+  </attributes>
+</project-module>
+
